@@ -27,13 +27,19 @@ public class SortJobService {
             job.setStatus(StatusEnum.PROCESSING);
             char[] chars = job.getPayload().toCharArray();
             Arrays.sort(chars);
-            String result = new String(chars);
-            job.setResult(result.trim());
+            String result = new String(chars).trim().toLowerCase();
+            job.setResult(result);
+            Thread.sleep(result.length()*2);
             repository.save(job);
             job.setStatus(StatusEnum.DONE);
             log.info("Processing sort job completed. id={}, status={}, durationMs={}", job.getId(), job.getStatus(),
                     System.currentTimeMillis() - startedAt);
             return job;
+        } catch (InterruptedException ex) {
+            log.error("Processing sort job interrupted. durationMs={}, error={}", System.currentTimeMillis() - startedAt,
+                    ex.getMessage(), ex);
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(ex);
         } catch (RuntimeException ex) {
             log.error("Processing sort job failed. durationMs={}, error={}", System.currentTimeMillis() - startedAt,
                     ex.getMessage(), ex);

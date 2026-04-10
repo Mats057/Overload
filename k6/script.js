@@ -1,25 +1,26 @@
 import http from 'k6/http'
 import { check, sleep } from 'k6'
+import { randomIntBetween, randomString } from 'https://jslib.k6.io/k6-utils/1.2.0/index.js';
 
 export const options = {
   stages: [
-    { duration: '10s', target: 200 },
-    { duration: '1m', target: 200 },
+    { duration: '10s', target: 2000 },
+    { duration: '1m', target: 2000 },
     { duration: '30s', target: 0 },
   ],
-  thresholds: { http_req_duration: ['avg<100', 'p(95)<200'] },
+  thresholds: { http_req_duration: ['avg<500', 'p(95)<1000'] },
   noConnectionReuse: true,
   userAgent: 'MyK6UserAgentString/1.0',
 };
 
-
 export default function () {
-    const data = { payload: 'jahdfukasiudgaisugduasgdkugaskdasgdkasgp[qicjsak.jcuahgueiqkldhnjaklscjeopiasfyhioqwaehqoweqw654df6a5d4h65hfg4k6hj54olhjk564ikg54n56df4fx56dzjahdfukasiudgaisugduasgdkugaskdasgdkasgp[qicjsak.jcuahgueiqkldhnjaklscjeopiasfyhioqwaehqoweqw654df6a5d4h65hfg4k6hj54olhjk564ikg54n56df4fx56dzjahdfukasiudgaisugduasgdkugaskdasgdkasgp[qicjsak.jcuahgueiqkldhnjaklscjeopiasfyhioqwaehqoweqw654df6a5d4h65hfg4k6hj54olhjk564ikg54n56df4fx56dzjhljhjahdfukasiudgaisugduasgdkugaskdasgdkasgp[qicjsak.jcuahgueiqkldhnjaklscjeopiasfyhioqwaehqoweqw654df6a5d4h65hfg4k6hj54olhjk564ikg54n56df4fx56dzkjghkhjgakdgaksjgdjkashgjahdfukasiudgaisugduasgdkugaskdasgdkasgp[qicjsak.jcuahgueiqkldhnjaklscjeopiasfyhioqwaehqoweqw654df6a5d4h65hfg4k6hj54olhjk564ikg54n56df4fx56dzjhajshdkjashdjkhawuileryqwoiueoiqwjahdfukasiudgaisugduasgdkugaskdasgdkasgp[qicjsak.jcuahgueiqkldhnjaklscjeopiasfyhioqwaehqoweqw654df6a5d4h65hfg4k6hj54olhjk564ikg54n56df4fx56dz1239-08490qut0ywergoidsuoifyjahdfukasiudgaisugduasgdkugaskdasgdkasgp[qicjsak.jcuahgueiqkldhnjaklscjeopiasfyhioqwaehqoweqw654df6a5d4h65hfg4k6hj54olhjk564ikg54n56df4fx56dz902873409723097ru9pqwujahdfukasiudgaisugduasgdkugaskdasgdkasgp[qicjsak.jcuahgueiqkldhnjaklscjeopiasfyhioqwaehqoweqw654df6a5d4h65hfg4k6hj54olhjk564ikg54n56df4fx56dzjasedjwqop4u2390urfaf' }
-    let res = http.post('http://localhost:8080/sort', data)
 
-    console.log(res.status);
+  const randomSize = randomIntBetween(5, 2000);
+  const payload = randomString(randomSize);
+  const data = { payload }
+  let res = http.post('http://localhost:8080/sort', data)
 
-    check(res, { 'success request': (r) => r.status === 200 })
+  check(res, { 'success request': (r) => r.status === 200 })
 
-    sleep(0.3)
+  sleep(0.3)
 }
